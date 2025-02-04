@@ -42,7 +42,10 @@ const btnType = computed(() => {
 </script>
 
 <template>
-  <el-button @click.prevent="deleteRow(scope.$index)" :type="type !== 'edit' && type !== 'view' ? btnType : ''" :color="type === 'edit' || type === 'view' ? btnType : ''" class="color-white rounded-5px">
+  <el-button @click.prevent="deleteRow(scope.$index)" :type="type !== 'edit' && type !== 'view' ? btnType : ''" :color="type === 'edit' || type === 'view' ? btnType : ''" class="color-white rounded-5px h-28px">
     {{ name }}
   </el-button>
 </template>
+
+<style scoped>
+</style>

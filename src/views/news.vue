@@ -1,6 +1,9 @@
 <script setup>
+import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
-import { onMounted, ref } from 'vue';
+import Dialog from '@/components/Dialog.vue'
+import Pagination from '@/components/Pagination.vue'
+import { computed, ref } from 'vue';
 
 const userPermission = [{
   id: "500071549886469",
@@ -47,44 +50,132 @@ const newsList = ref([
     modDate: '2024-02-03',
     pubDate: '2024-02-03',
     active: true,
-  }
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息一',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息九',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
+  {
+    id: '11111',
+    title: '消息十',
+    summary: 'XXXXXXXXXXX',
+    content: 'aaaabbbccc',
+    createDate: '2024-01-15',
+    modDate: '2024-02-03',
+    pubDate: '2024-02-03',
+    active: true,
+  },
 ])
+
+const searchQuery = ref({
+  page: 1,
+  limit: 10,
+})
+
+const dataTotal = computed(() => newsList.value.length)
+
+const dialog = ref({
+  visible: false,
+  mode: 'add',
+})
+
+const openDialog = (type) => {
+  dialog.value.visible = true;
+  dialog.value.mode = type;
+}
 
 </script>
 
-
-
 <template>
-  <section class="p-10px">
-    <div class="mb-30px flex justify-end items-center">
-      <CommonButton name="新增" />
-    </div>
-    <el-table :data="newsList" style="width: 100%" header-row-style="color: #A0AEC0; font-weight: 700; font-size: 18px;"
-      row-style="font-size: 14px; color: black;">
-      <el-table-column prop="title" label="標題" min-width="200" />
-      <el-table-column prop="summary" label="摘要" min-width="150">
-        <template #default="{ row }">
-          <p class="truncate">{{ row.summary }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column prop="active" label="啟用" width="150">
-        <template #default="{ row }">
-          <el-tag :type="row.active ? 'success' : 'danger'">{{ row.active ? '已啟用' : '未啟用' }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="230">
-        <template #default>
-          <div class="flex justify-between">
-            <CommonButton type="view" name="查看" />
-            <CommonButton type="edit" name="編輯" />
-            <CommonButton type="danger" name="刪除" />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+  <CommonTable :data="newsList">
+    <template #header>
+      <CommonButton name="新增" @click="openDialog('add')" />
+    </template>
+    <template #toolbar>
+      <CommonButton type="view" name="查看" />
+      <CommonButton type="edit" name="編輯" />
+      <CommonButton type="danger" name="刪除" />
+    </template>
+    <template #pagination>
+      <Pagination :page="searchQuery.page" :limit="searchQuery.limit" :total="dataTotal" />
+    </template>
 
-    <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[100, 200, 300, 400]"
-      :size="size" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
-      :total="400" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-  </section>
+    <Dialog :visible="dialog.visible" />
+  </CommonTable>
 </template>
