@@ -14,12 +14,12 @@ const props = defineProps({
 
 
 <template>
-  <section class="p-10px flex flex-col justify-between">
+  <section class="p-10px flex flex-col h-full justify-between">
     <div class="h-[calc(100%-38px)]">
       <div class="mb-15px flex justify-end items-center">
         <slot name="header"></slot>
       </div>
-      <el-table :data="data" style="width: 100%" height="88%"
+      <el-table :data="data" style="width: 100%" height="90%"
         :header-row-style="{ color: '#A0AEC0', fontWeight: '700', fontSize: '18px'}"
         :row-style="{ fontSize: '14px', color: 'black' }">
         <el-table-column prop="title" label="標題" min-width="200" />
@@ -46,3 +46,9 @@ const props = defineProps({
     <slot name="pagination"></slot>
   </section>
 </template>
+
+<style scoped>
+:deep(.el-table--fit .el-table__inner-wrapper:before) {
+  width: 0;
+}
+</style>

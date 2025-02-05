@@ -10,6 +10,10 @@ const props = defineProps({
     type: String,
     default: () => '按鈕',
   },
+  size: {
+    type: String,
+    default: () => '',
+  },
 });
 
 const { type, name } = toRefs(props)
@@ -42,7 +46,8 @@ const btnType = computed(() => {
 </script>
 
 <template>
-  <el-button @click.prevent="deleteRow(scope.$index)" :type="type !== 'edit' && type !== 'view' ? btnType : ''" :color="type === 'edit' || type === 'view' ? btnType : ''" class="color-white rounded-5px h-28px">
+  <el-button :size :type="type !== 'edit' && type !== 'view' ? btnType : ''"
+    :color="type === 'edit' || type === 'view' ? btnType : ''" :class="size === '' ? 'h-26px' : ''" class="color-white rounded-5px">
     {{ name }}
   </el-button>
 </template>

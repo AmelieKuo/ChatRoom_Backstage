@@ -2,8 +2,11 @@
 import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
 import Dialog from '@/components/Dialog.vue'
+import Alert from '@/components/Alert.vue'
 import Pagination from '@/components/Pagination.vue'
-import { computed, ref } from 'vue';
+import { computed, ref, inject } from 'vue';
+
+const $alert = inject('$alert') 
 
 const userPermission = [{
   id: "500071549886469",
@@ -155,27 +158,40 @@ const dialog = ref({
   mode: 'add',
 })
 
-const openDialog = (type) => {
+const openDialog = async(type) => {
   dialog.value.visible = true;
   dialog.value.mode = type;
+
+  const result = await $alert({
+    title: '刪除確認',
+    content: '確定要刪除這個項目嗎？',
+    type: 'warning',
+    showCancel: true
+  })
+  console.log('使用者選擇:', result ? '確定' : '取消')
+}
+
+const closeDialog = () => {
+  console.log('1111')
 }
 
 </script>
 
 <template>
-  <CommonTable :data="newsList">
-    <template #header>
-      <CommonButton name="新增" @click="openDialog('add')" />
-    </template>
-    <template #toolbar>
-      <CommonButton type="view" name="查看" />
-      <CommonButton type="edit" name="編輯" />
-      <CommonButton type="danger" name="刪除" />
-    </template>
-    <template #pagination>
-      <Pagination :page="searchQuery.page" :limit="searchQuery.limit" :total="dataTotal" />
-    </template>
+  <section>
+    <CommonTable :data="newsList">
+      <template #header>
+        <CommonButton name="新增" @click="openDialog('add')" class="h-32px!" />
+      </template>
+      <template #toolbar>
+        <CommonButton type="view" name="查看" />
+        <CommonButton type="edit" name="編輯" />
+        <CommonButton type="danger" name="刪除" />
+      </template>
+      <template #pagination>
+        <Pagination :page="searchQuery.page" :limit="searchQuery.limit" :total="dataTotal" />
+      </template>
+    </CommonTable>
 
-    <Dialog :visible="dialog.visible" />
-  </CommonTable>
+  </section>
 </template>
