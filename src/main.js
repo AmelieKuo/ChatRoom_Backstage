@@ -7,7 +7,7 @@ import 'element-plus/dist/index.css';
 import zhTw from 'element-plus/dist/locale/zh-tw.mjs';
 import 'virtual:uno.css';
 import './assets/css/style.css';
-import { setupDayjs, setupAlert } from '@/plugins';
+import { setupDayjs, setupAlert, setupCkeditor } from '@/plugins';
 
 import App from './App.vue';
 import router from './router';
@@ -17,6 +17,7 @@ const pinia = createPinia()
 
 setupDayjs(app);
 setupAlert(app);
+setupCkeditor(app);
 
 app.use(ElementPlus, { locale: zhTw });
 app.use(pinia);

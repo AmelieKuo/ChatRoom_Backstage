@@ -11,6 +11,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
