@@ -2,9 +2,9 @@
 import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
 import Dialog from '@/components/Dialog.vue'
-import Alert from '@/components/Alert.vue'
+import Editor from '@/components/Editor.vue'
 import Pagination from '@/components/Pagination.vue'
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, reactive } from 'vue';
 
 const $alert = inject('$alert') 
 
@@ -158,22 +158,34 @@ const dialog = ref({
   mode: 'add',
 })
 
-const openDialog = async(type) => {
+const handleDel = async ({ index, row }) => {
+  $alert({
+    title: `確定要刪除 ${index}-${row.title} 嗎？`,
+    type: 'warning',
+    showCancel: true,
+    timer: 3000,
+  }).then((result) => {
+      console.log(result)
+  })
+}
+
+const showDialog = async (type) => {
   dialog.value.visible = true;
   dialog.value.mode = type;
-
-  const result = await $alert({
-    title: '刪除確認',
-    content: '確定要刪除這個項目嗎？',
-    type: 'warning',
-    showCancel: true
-  })
-  console.log('使用者選擇:', result ? '確定' : '取消')
 }
 
 const closeDialog = () => {
   console.log('1111')
 }
+
+const form = reactive({
+  title: '',
+  content: 'ffff',
+  active: '',
+})
+
+// publicDate: '',
+//   modifiedDate: '',
 
 </script>
 
@@ -181,17 +193,28 @@ const closeDialog = () => {
   <section>
     <CommonTable :data="newsList">
       <template #header>
-        <CommonButton name="新增" @click="openDialog('add')" class="h-32px!" />
+        <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
       </template>
-      <template #toolbar>
+      <template #toolbar="{ row, index }">
         <CommonButton type="view" name="查看" />
         <CommonButton type="edit" name="編輯" />
-        <CommonButton type="danger" name="刪除" />
+        <CommonButton type="danger" name="刪除" @click="handleDel({index, row})" />
       </template>
       <template #pagination>
         <Pagination :page="searchQuery.page" :limit="searchQuery.limit" :total="dataTotal" />
       </template>
     </CommonTable>
+
+    <Dialog :visible="dialog.visible" :mode="dialog.mode" @close="closeDialog">
+      <el-form :model="form" label-width="auto" label-position="top">
+        <el-form-item label="標題">
+          <el-input v-model="form.title" />
+        </el-form-item>
+        <el-form-item label="內容">
+          <Editor v-model="form.content" />
+        </el-form-item>
+      </el-form>
+    </Dialog>
 
   </section>
 </template>

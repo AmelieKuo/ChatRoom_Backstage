@@ -34,9 +34,9 @@ const props = defineProps({
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="230">
-          <template #default>
+          <template #default="{ row, $index }">
             <div class="flex justify-between">
-              <slot name="toolbar"></slot>
+              <slot name="toolbar" :row="row" :index="$index"></slot>
             </div>
           </template>
         </el-table-column>

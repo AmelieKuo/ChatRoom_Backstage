@@ -1,9 +1,8 @@
 <script setup>
 import { ref, defineProps, computed } from 'vue'
-import { ElButton, ElDialog } from 'element-plus'
-import { CircleCloseFilled } from '@element-plus/icons-vue'
+import { CloseBold } from '@element-plus/icons-vue'
 
-const prop = defineProps({
+const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
@@ -12,15 +11,18 @@ const prop = defineProps({
     type: String,
     default: 'add',
   },
+  title: {
+    type: String,
+    default: '',
+  },
 });
 
 const currentVisible = computed(() => {
-  console.log(prop.visible)
-  return prop.visible
+  return props.visible
 })
 
 const currentMode = computed(() => {
-  switch (prop.mode) {
+  switch (props.mode) {
     case 'add':
       return '新增'
     case 'edit':
@@ -35,10 +37,13 @@ const currentMode = computed(() => {
 </script>
 
 <template>
-  <el-dialog v-model="currentVisible" :show-close="true" width="500" class="rounded-5px p-20px">
+  <el-dialog v-model="currentVisible" :show-close="false" width="500" class="rounded-5px p-20px">
     <template #header="{ close, titleId, titleClass }">
-      <h4 class="color-text_dark text-20px font-bold">{{ currentMode }}</h4>
+      <div class="w-full flex justify-between items-center">
+        <h4 class="color-text_dark text-20px font-bold color-text_dark">{{ currentMode }}{{ props.title }}</h4>
+        <CloseBold class="w-20px color-text_light hover:opacity-80" />
+      </div>
     </template>
-    This is dialog content.
+    <slot />
   </el-dialog>
 </template>
