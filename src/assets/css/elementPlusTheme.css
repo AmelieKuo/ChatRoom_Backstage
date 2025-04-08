@@ -21,3 +21,7 @@
   --el-color-error-light-8: rgba(224, 30, 90, 0.2);
   --el-color-error-light-9: rgba(224, 30, 90, 0.1);
 }
+
+.el-input__wrapper{
+  border-radius: 5px;
+}
