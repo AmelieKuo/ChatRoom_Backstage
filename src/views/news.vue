@@ -50,8 +50,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -60,8 +60,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -70,8 +70,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -80,8 +80,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -90,8 +90,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -100,8 +100,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -110,8 +110,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -120,8 +120,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -130,8 +130,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
   {
@@ -140,8 +140,8 @@ const newsList = ref([
     summary: 'XXXXXXXXXXX',
     content: 'aaaabbbccc',
     createDate: '2024-01-15',
-    modDate: '2024-02-03',
-    pubDate: '2024-02-03',
+    modifiedDate: '2024-02-03',
+    publicDate: '2024-02-03',
     active: true,
   },
 ])
@@ -156,37 +156,59 @@ const dataTotal = computed(() => newsList.value.length)
 const dialog = ref({
   visible: false,
   mode: 'add',
+});
+
+const form = reactive({
+  title: '',
+  summary: '',
+  content: '',
+  active: true,
 })
+
+const formTemplate = ref(form)
+
+const showDialog = async (type, row, idx) => {
+  Object.assign(form, formTemplate.value)
+  dialog.value.visible = true;
+  dialog.value.mode = type;
+
+  if(type === 'add')return;
+  Object.assign(form, row);
+}
+
+const closeDialog = () => {
+  console.log('close')
+}
+
+const handleConfirm = () => {
+  console.log('儲存', form)
+  $alert({
+    title: `儲存成功`,
+    type: 'success',
+    showCancel: false,
+    timer: 3000,
+  }).then((result) => {
+    console.log(result)
+  })
+}
 
 const handleDel = async ({ index, row }) => {
   $alert({
     title: `確定要刪除 ${index}-${row.title} 嗎？`,
     type: 'warning',
     showCancel: true,
-    timer: 3000,
+    showConfirm: true,
   }).then((result) => {
-      console.log(result)
+    if (result){
+      console.log('刪除', row)
+      $alert({
+        title: `刪除成功`,
+        type: 'success',
+        timer: 3000,
+      })
+    }
   })
 }
-
-const showDialog = async (type) => {
-  dialog.value.visible = true;
-  dialog.value.mode = type;
-}
-
-const closeDialog = () => {
-  console.log('1111')
-}
-
-const form = reactive({
-  title: '',
-  content: 'ffff',
-  active: '',
-})
-
-// publicDate: '',
-//   modifiedDate: '',
-
 </script>
 
 <template>
@@ -196,8 +218,8 @@ const form = reactive({
         <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
       </template>
       <template #toolbar="{ row, index }">
-        <CommonButton type="view" name="查看" />
-        <CommonButton type="edit" name="編輯" />
+        <CommonButton type="view" name="查看" @click="showDialog('view', row, index)" />
+        <CommonButton type="edit" name="編輯" @click="showDialog('edit', row, index)" />
         <CommonButton type="danger" name="刪除" @click="handleDel({index, row})" />
       </template>
       <template #pagination>
@@ -205,13 +227,25 @@ const form = reactive({
       </template>
     </CommonTable>
 
-    <Dialog :visible="dialog.visible" :mode="dialog.mode" @close="closeDialog">
-      <el-form :model="form" label-width="auto" label-position="top">
+    <Dialog v-model:visible="dialog.visible" :mode="dialog.mode" @confirm="handleConfirm" @update:visible="closeDialog">
+      <el-form :model="form" label-width="auto" label-position="top" :disabled="dialog.mode === 'view'">
         <el-form-item label="標題">
           <el-input v-model="form.title" />
         </el-form-item>
-        <el-form-item label="內容">
-          <Editor v-model="form.content" />
+        <el-form-item label="摘要">
+          <el-input v-model="form.summary" />
+        </el-form-item>
+        <el-form-item label="內文">
+          <Editor v-model="form.content" :disabled="dialog.mode === 'view'" />
+        </el-form-item>
+        <el-form-item v-if="dialog.mode !== 'add' && form.active" label="發布日期">
+          <p>{{ form.publicDate }}</p>
+        </el-form-item>
+        <el-form-item v-if="dialog.mode !== 'add'" label="修改日期">
+          <p>{{ form.modifiedDate }}</p>
+        </el-form-item>
+        <el-form-item label="狀態">
+          <el-switch v-model="form.active" />
         </el-form-item>
       </el-form>
     </Dialog>

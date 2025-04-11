@@ -4,34 +4,12 @@ import { CircleCheck, Warning, CircleClose } from '@element-plus/icons-vue'
 import CommonButton from '@/components/CommonButton.vue'
 import { fa } from 'element-plus/es/locales.mjs'
 
-// const prop = defineProps({
-//   visible: {
-//     type: Boolean,
-//     default: false,
-//   },
-//   title: {
-//     type: String,
-//     default: '新增',
-//   },
-//   content: {
-//     type: String,
-//     default: '',
-//   },
-//   type: {
-//     type: String,
-//     default: 'success',
-//   },
-//   timerProgressBar: {
-//     type: Boolean,
-//     default: false,
-//   },
-// });
-
 const alertOptions = ref({
   title: '',
   content: '',
   type: '',
   showCancel: false,
+  showConfirm: false,
   visible: false,
   timer: null,
 })
@@ -89,10 +67,9 @@ defineExpose({ handleOpen })
         </div>
       </div>
       <template #footer>
-        <div class="mt-5px">
-          <CommonButton @click="handleClose" name="取消" size="large" />
-          <CommonButton @click="handleClose" type="danger" name="取消" size="large" />
-          <CommonButton @click="handleConfirm" type="edit" name="確定" size="large" />
+        <div v-if="alertOptions.showConfirm || alertOptions.showCancel" class="mt-5px">
+          <CommonButton v-if="alertOptions.showCancel" @click="handleClose" type="danger" name="取消" size="large" />
+          <CommonButton v-if="alertOptions.showConfirm" @click="handleConfirm" type="edit" name="確定" size="large" />
         </div>
       </template>
       <el-progress v-if="alertOptions.timer" :percentage="100" :indeterminate="true" :duration="alertOptions.timer"
