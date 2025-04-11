@@ -20,8 +20,15 @@
   --el-color-error-light-7: rgba(224, 30, 90, 0.3);
   --el-color-error-light-8: rgba(224, 30, 90, 0.2);
   --el-color-error-light-9: rgba(224, 30, 90, 0.1);
+
+  --el-input-text-color: var(--text_dark);
+  --el-text-color-regular: var(--text_dark);
 }
 
 .el-input__wrapper{
   border-radius: 5px;
+}
+
+.el-form-item__label{
+  color: var(--text_light);
 }
