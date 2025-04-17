@@ -1,5 +1,5 @@
 <script setup>
-import { computed, toRefs } from 'vue';
+import { computed, toRefs, defineProps } from 'vue';
 
 const props = defineProps({
   type: {

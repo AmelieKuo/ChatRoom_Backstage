@@ -12,45 +12,76 @@ const router = createRouter({
         {
           path: "",
           name: "index",
+          meta: {
+            title: "首頁"
+          },
           component: () => import("@/views/index.vue"),
         },
         {
           path: "user",
           name: "user",
+          meta: {
+            title: "會員管理"
+          },
           component: () => import("@/views/user.vue"),
         },
         {
           path: "permission",
           name: "permission",
+          meta: {
+            title: "權限管理"
+          },
           children: [
             {
               path: "page",
               name: "permission-page",
+              meta: {
+                title: "頁面管理"
+              },
               component: () => import("@/views/permission/page.vue"),
             },
             {
               path: "element",
               name: "permission-element",
+              meta: {
+                title: "元件管理"
+              },
               component: () => import("@/views/permission/element.vue"),
+            },
+            {
+              path: "role",
+              name: "permission-role",
+              meta: {
+                title: "角色權限"
+              },
+              component: () => import("@/views/permission/role.vue"),
             },
           ],
         },
         {
           path: "news",
           name: "news",
+          meta: {
+            title: "最新消息管理"
+          },
           component: () => import("@/views/news.vue"),
-          // meta: { requiresAuth: true },
         },
         {
-          path: "settings",
-          name: "settings",
-          component: () => import("@/views/user.vue"),
+          path: "setting",
+          name: "setting",
+          meta: {
+            title: "設定"
+          },
+          component: () => import("@/views/setting.vue"),
         },
       ],
     },
     {
       path: "/login",
       name: "login",
+      meta: {
+        title: "登入"
+      },
       component: () => import("@/views/login.vue"),
     },
     /**

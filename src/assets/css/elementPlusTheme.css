@@ -25,8 +25,12 @@
   --el-text-color-regular: var(--text_dark);
 }
 
-.el-input__wrapper{
+.el-input__wrapper, .el-select__wrapper{
   border-radius: 5px;
+}
+
+.el-select__wrapper{
+  height: 38px;
 }
 
 .el-form-item__label{

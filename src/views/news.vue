@@ -62,7 +62,7 @@ const newsList = ref([
     createDate: '2024-01-15',
     modifiedDate: '2024-02-03',
     publicDate: '2024-02-03',
-    active: true,
+    active: false,
   },
   {
     id: '11111',
@@ -102,7 +102,7 @@ const newsList = ref([
     createDate: '2024-01-15',
     modifiedDate: '2024-02-03',
     publicDate: '2024-02-03',
-    active: true,
+    active: false,
   },
   {
     id: '11111',
@@ -165,19 +165,15 @@ const form = reactive({
   active: true,
 })
 
-const formTemplate = ref(form)
+const formTemplate = JSON.parse(JSON.stringify(form))
 
 const showDialog = async (type, row, idx) => {
-  Object.assign(form, formTemplate.value)
+  Object.assign(form, formTemplate)
   dialog.value.visible = true;
   dialog.value.mode = type;
 
   if(type === 'add')return;
   Object.assign(form, row);
-}
-
-const closeDialog = () => {
-  console.log('close')
 }
 
 const handleConfirm = () => {
@@ -214,20 +210,37 @@ const handleDel = async ({ index, row }) => {
 <template>
   <section>
     <CommonTable :data="newsList">
+
       <template #header>
         <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
       </template>
+
+      <template #table>
+        <el-table-column prop="title" label="標題" min-width="200" />
+        <el-table-column prop="summary" label="摘要" min-width="150">
+          <template #default="{ row }">
+            <p class="truncate">{{ row.summary }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column prop="active" label="狀態" width="150">
+          <template #default="{ row }">
+            <el-tag :type="row.active ? 'success' : 'danger'">{{ row.active ? '已公開' : '未公開' }}</el-tag>
+          </template>
+        </el-table-column>
+      </template>
+
       <template #toolbar="{ row, index }">
         <CommonButton type="view" name="查看" @click="showDialog('view', row, index)" />
         <CommonButton type="edit" name="編輯" @click="showDialog('edit', row, index)" />
-        <CommonButton type="danger" name="刪除" @click="handleDel({index, row})" />
+        <CommonButton type="danger" name="刪除" @click="handleDel({ index, row })" />
       </template>
+
       <template #pagination>
         <Pagination :page="searchQuery.page" :limit="searchQuery.limit" :total="dataTotal" />
       </template>
     </CommonTable>
 
-    <Dialog v-model:visible="dialog.visible" :mode="dialog.mode" @confirm="handleConfirm" @update:visible="closeDialog">
+    <Dialog v-model:visible="dialog.visible" :mode="dialog.mode" @confirm="handleConfirm">
       <el-form :model="form" label-width="auto" label-position="top" :disabled="dialog.mode === 'view'">
         <el-form-item label="標題">
           <el-input v-model="form.title" />

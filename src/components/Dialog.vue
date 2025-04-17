@@ -41,7 +41,7 @@ const handleConfirm = () => {
   <el-dialog :modelValue="currentVisible" :show-close="false" width="500" class="rounded-5px p-20px">
     <template #header>
       <div class="w-full flex justify-between items-center color-text_dark">
-        <h4 class="text-20px font-bold">{{ currentMode }}{{ props.title }}</h4>
+        <h4 class="text-20px font-bold">{{ props.title ? props.title : currentMode }}</h4>
         <CloseBold @click="handleClose" class="w-20px color-text_light hover:opacity-80" />
       </div>
     </template>

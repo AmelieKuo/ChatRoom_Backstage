@@ -9,12 +9,12 @@ const menuList = [
   { name: '權限管理', path: '/', icon: 'Tools',
     children:[
       { name: '頁面管理', path: '/permission/page'},
-      { name: '元件管理', path: '/permission/components'},
+      { name: '元件管理', path: '/permission/element'},
       { name: '角色權限', path: '/permission/role'}
     ]
   },
   { name: '會員管理', path: '/user', icon: 'UserFilled' },
-  { name: '最新消息', path: '/news', icon: 'List' },
+  { name: '最新消息管理', path: '/news', icon: 'List' },
 ]
 
 /** @func 前往其他頁 */ 
