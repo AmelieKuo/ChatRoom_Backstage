@@ -1,6 +1,7 @@
 <script setup>
 import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
+import avatarUpload from '@/components/upload/avatarUpload.vue'
 import Dialog from '@/components/Dialog.vue'
 import Editor from '@/components/Editor.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -47,7 +48,12 @@ const userPermission = [{
       },
     ]
   }]
-}]
+}];
+
+const registerTypeList = [
+  { label: '一般註冊', value: 0 },
+  { label: '第三方註冊', value: 1 },
+]
 
 const newsList = ref([
   {
@@ -105,9 +111,13 @@ const dialog = ref({
 });
 
 const form = reactive({
-  title: '',
-  summary: '',
+  id:'',
+  name: '',
+  pic: '',
+  account: '',
   content: '',
+  role: [],
+  registerType: 0,
   active: true,
 })
 
@@ -136,7 +146,7 @@ const handleConfirm = () => {
 
 const handleDel = async ({ index, row }) => {
   $alert({
-    title: `確定要刪除 ${index}-${row.title} 嗎？`,
+    title: `確定要刪除 ${index}-${row.name} 嗎？`,
     type: 'warning',
     showCancel: true,
     showConfirm: true,
@@ -151,6 +161,14 @@ const handleDel = async ({ index, row }) => {
     }
   })
 }
+
+const uploadAvatar = (file) => {
+  console.log(file);
+  form.pic = file.filePath
+  console.log(form);
+}
+
+
 </script>
 
 <template>
@@ -162,18 +180,21 @@ const handleDel = async ({ index, row }) => {
       </template>
 
       <template #table>
-        <el-table-column prop="name" label="會員名稱" min-width="200">
+        <el-table-column prop="name" label="會員名稱" min-width="100">
           <template #default="{ row }">
             <div class="flex items-center gap-10px">
-              <el-avatar :size="42" src="https://empty" @error="errorHandler">
-                <img :src="row.pic ? row.pic : '/images/avatar.svg'" />
-              </el-avatar>
+              <el-avatar :size="42" fit="cover" :src="row.pic ? row.pic : '/images/avatar.svg'" />
               <span>{{ row.name }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="account" label="帳號" min-width="150" />
-        <el-table-column prop="active" label="狀態" width="150">
+        <el-table-column prop="account" label="帳號" min-width="100" />
+         <el-table-column prop="registerType" label="註冊類型" min-width="100">
+          <template #default="{ row }">
+            {{ registerTypeList.find(item => item.value === row.registerType)?.label }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="active" label="狀態" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.active ? 'success' : 'danger'">{{ row.active ? '已啟用' : '未啟用' }}</el-tag>
           </template>
@@ -194,7 +215,7 @@ const handleDel = async ({ index, row }) => {
     <Dialog v-model:visible="dialog.visible" :mode="dialog.mode" @confirm="handleConfirm">
       <el-form :model="form" label-width="auto" label-position="top" :disabled="dialog.mode === 'view'">
         <el-form-item label="會員照片">
-          <el-input v-model="form.pic" />
+          <avatarUpload :imgSrc="form.pic" :size="80" :disabled="dialog.mode === 'view'" @update:modelValue="uploadAvatar"/>
         </el-form-item>
         <el-form-item label="會員名稱">
           <el-input v-model="form.name" />
@@ -202,8 +223,8 @@ const handleDel = async ({ index, row }) => {
         <el-form-item label="帳號">
           <el-input v-model="form.account" />
         </el-form-item>
-        <el-form-item label="註冊類型">
-          <p>{{ form.registerType }}</p>
+        <el-form-item v-if="dialog.mode !== 'add'" label="註冊類型">
+          <p>{{ registerTypeList.find(item => item.value === form.registerType)?.label }}</p>
         </el-form-item>
         <el-form-item label="修改日期">
           <el-checkbox-group v-model="form.role">
