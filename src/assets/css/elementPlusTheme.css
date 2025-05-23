@@ -1,0 +1,38 @@
+:root {
+  --el-color-primary: var(--main_green);
+  --el-input-border-radius: 11.25px;
+  --el-border-radius-base: 11.25px;
+  --el-component-size: 38px;
+  --el-color-primary-dark-2: rgb(55, 142, 133);
+  --el-color-primary-light-5: rgb(102, 206, 195);
+  --el-color-primary-light-3: rgb(127, 206, 198);
+
+  --el-color-success: var(--success);
+  --el-color-success-light-3: rgba(72, 187, 120, 0.7);
+  --el-color-success-light-5: rgba(72, 187, 120, 0.5);
+  --el-color-success-light-7: rgba(72, 187, 120, 0.3);
+  --el-color-success-light-8: rgba(72, 187, 120, 0.2);
+  --el-color-success-light-9: rgba(72, 187, 120, 0.1);
+
+  --el-color-danger: var(--danger);
+  --el-color-error-light-3: rgba(224, 30, 90, 0.7);
+  --el-color-error-light-5: rgba(224, 30, 90, 0.5);
+  --el-color-error-light-7: rgba(224, 30, 90, 0.3);
+  --el-color-error-light-8: rgba(224, 30, 90, 0.2);
+  --el-color-error-light-9: rgba(224, 30, 90, 0.1);
+
+  --el-input-text-color: var(--text_dark);
+  --el-text-color-regular: var(--text_dark);
+}
+
+.el-input__wrapper, .el-select__wrapper{
+  border-radius: 5px;
+}
+
+.el-select__wrapper{
+  height: 38px;
+}
+
+.el-form-item__label{
+  color: var(--text_light);
+}
