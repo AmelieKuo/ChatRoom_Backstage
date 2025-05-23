@@ -8,7 +8,7 @@ const devTeam = [
     cake: 'https://github.com/AmelieKuo',
     email: 'amelie.chihyu.kuo@gmail.com',
     phone: '0978101246',
-    image: '/images/devTeam/amelie.png',
+    image: 'images/devTeam/amelie.png',
   },
   {
     name: 'Neil',
@@ -18,7 +18,7 @@ const devTeam = [
     cake: 'https://github.com/AmelieKuo',
     email: 'amelie.chihyu.kuo@gmail.com',
     phone: '0978101246',
-    image: '/images/devTeam/neil.png',
+    image: 'images/devTeam/neil.png',
   }
 ]
 
