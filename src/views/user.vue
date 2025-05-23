@@ -183,7 +183,7 @@ const uploadAvatar = (file) => {
         <el-table-column prop="name" label="會員名稱" min-width="100">
           <template #default="{ row }">
             <div class="flex items-center gap-10px">
-              <el-avatar :size="42" fit="cover" :src="row.pic ? row.pic : '/images/avatar.svg'" />
+              <el-avatar :size="42" fit="cover" :src="row.pic ? row.pic : 'images/avatar.svg'" />
               <span>{{ row.name }}</span>
             </div>
           </template>
