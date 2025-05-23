@@ -1,0 +1,73 @@
+name: Deploy ChatRoom Backstage (Vue SPA)
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REMOTE_PATH: /home/AmelieKuo/project/chatroom/backstage
+  SERVER_IP: ${{ secrets.SERVER_IP }}
+  SERVER_USER: ${{ secrets.SERVER_USER }}
+  SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  TAR_NAME: backstage-dist.tar.gz
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+          tar -czf ${{ env.TAR_NAME }} dist
+
+      - name: Upload archive to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SSH_KEY }}
+          source: ${{ env.TAR_NAME }}
+          target: "~"
+
+      - name: Extract on server and deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SSH_KEY }}
+          script: |
+            timestamp=$(date +%Y%m%d%H%M%S)
+            release_dir=${{ env.REMOTE_PATH }}/releases/$timestamp
+            mkdir -p $release_dir
+
+            if [ -d "${{ env.REMOTE_PATH }}/current" ]; then
+              rsync -a ${{ env.REMOTE_PATH }}/current/ $release_dir/
+            fi
+
+            mkdir -p ${{ env.REMOTE_PATH }}/current
+            find ${{ env.REMOTE_PATH }}/current -mindepth 1 -exec rm -rf {} +
+
+            tar -xzf ~/${{ env.TAR_NAME }} -C ${{ env.REMOTE_PATH }}/current
+            rm -f ~/${{ env.TAR_NAME }}
+
+            ls -dt ${{ env.REMOTE_PATH }}/releases/* | tail -n +4 | xargs rm -rf
+
+      - name: Reload Nginx (optional)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SSH_KEY }}
+          script: |
+            sudo nginx -t && sudo systemctl reload nginx
