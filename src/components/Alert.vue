@@ -4,7 +4,9 @@ import { CircleCheck, Warning, CircleClose } from '@element-plus/icons-vue'
 import CommonButton from '@/components/CommonButton.vue'
 import { fa } from 'element-plus/es/locales.mjs'
 
-const alertOptions = ref({
+const alertOptions = ref({})
+
+const alertOptionsTemplate = {
   title: '',
   content: '',
   type: '',
@@ -12,7 +14,7 @@ const alertOptions = ref({
   showConfirm: false,
   visible: false,
   timer: null,
-})
+};
 
 const isVisible = ref(false)
 const resolveAction = ref(null)
@@ -21,7 +23,7 @@ let autoCloseTimer = null
 
 const handleOpen = (options = {}) => {
   return new Promise(async (resolve) => {
-    alertOptions.value = { ...alertOptions.value, ...options }
+    alertOptions.value = { ...alertOptionsTemplate, ...options }
     alertOptions.value.timer = options.timer / 1000 || null
     isVisible.value = true
     if (options.timer) {
