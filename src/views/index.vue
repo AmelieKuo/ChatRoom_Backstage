@@ -2,20 +2,20 @@
 const devTeam = [
   {
     name: 'Amelie',
-    role: '前端工程師',
+    role: 'Front-end Developer',
     '104': 'https://github.com/AmelieKuo',
-    github: 'https://github.com/AmelieKuo',
     cake: 'https://github.com/AmelieKuo',
+    github: 'https://github.com/AmelieKuo',
     email: 'amelie.chihyu.kuo@gmail.com',
     phone: '0978101246',
     image: 'images/devTeam/amelie.png',
   },
   {
     name: 'Neil',
-    role: '後端工程師',
+    role: 'Back-end Developer',
     '104': 'https://github.com/AmelieKuo',
-    github: 'https://github.com/AmelieKuo',
     cake: 'https://github.com/AmelieKuo',
+    github: 'https://github.com/AmelieKuo',
     email: 'amelie.chihyu.kuo@gmail.com',
     phone: '0978101246',
     image: 'images/devTeam/neil.png',
@@ -33,18 +33,19 @@ const devTeam = [
             <li>
               <img :src="item.image" :alt="item.name">
             </li>
-            <li class="text-text_dark font-700 text-16px">
-              {{ item.name }}
+            <li class="text-text_dark font-700 text-16px text-center">
+              <p>{{ item.name }}</p>
+              <span class="text-14px">{{ item.role }}</span>
             </li>
             <li class="flex items-center justify-center gap-10px">
               <a :href="item['104']" class="w-40px h-40px rounded-full overflow-hidden hover:outline-main_green hover:outline-3px hover:outline-solid">
                 <img src="/images/jobBankLogo/104.png" alt="104" class="w-full">
               </a>
               <a :href="item.cake" class="w-40px h-40px rounded-full overflow-hidden hover:outline-main_green hover:outline-3px hover:outline-solid">
-                <img src="/images/jobBankLogo/github.png" alt="github" class="w-full">
+                <img src="/images/jobBankLogo/cake.jpg" alt="cake" class="w-full">
               </a>
               <a :href="item.cake" class="w-40px h-40px rounded-full overflow-hidden hover:outline-main_green hover:outline-3px hover:outline-solid">
-                <img src="/images/jobBankLogo/cake.jpg" alt="cake" class="w-full">
+                <img src="/images/jobBankLogo/github.png" alt="github" class="w-full">
               </a>
             </li>
             <li class="text-text_dark text-12px">
