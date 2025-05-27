@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue'
+import { defineProps, defineEmits, computed, ref } from 'vue'
 import CommonButton from '@/components/CommonButton.vue'
 // import type { UploadProps, UploadUserFile } from 'element-plus';
 
@@ -9,8 +9,8 @@ defineProps({
     default: '',
   },
   size: {
-    type: String,
-    default: '42',
+    type: Number,
+    default: 42,
   },
   disabled: {
     type: Boolean,
@@ -19,6 +19,8 @@ defineProps({
 })
 
 const emits = defineEmits(['update:modelValue'])
+
+const fileList = ref([]);
 
 const uploadFile = (options) => {
   const formData = new FormData();
@@ -58,7 +60,7 @@ const handleExceed = (files) => {
 
 <template>
   <div class="flex items-center gap-10px h-full">
-    <el-avatar :size="size" fit="cover" :src="imgSrc ? imgSrc : '/images/avatar.svg'" />
+    <el-avatar :size fit="cover" :src="imgSrc ? imgSrc : 'images/avatar.svg'" />
     <el-upload
       v-if="!disabled"
       v-model:file-list="fileList"
