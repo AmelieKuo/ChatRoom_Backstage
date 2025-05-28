@@ -70,7 +70,7 @@ const toPath = (link) => {
       </div>
       <h3 class="text-16px font-700">需要幫助嗎?</h3>
       <p class="text-16px">請聯絡開發人員</p>
-      <el-button type="primary" color="#ffff">聯絡我們</el-button>
+      <el-button @click="router.push('/')" type="primary" color="#ffff">聯絡我們</el-button>
     </div>
   </el-aside>
 </template>

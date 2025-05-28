@@ -29,6 +29,8 @@ const logNode = (node, data) => {
         style="width: 100%;"
         row-key="id"
         default-expand-all
+        :header-row-style="{ color: '#A0AEC0', fontWeight: '700', fontSize: '18px'}"
+        :row-style="{ fontSize: '14px', color: 'black' }"
       >
     
         <slot name="table"></slot>
