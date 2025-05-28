@@ -21,7 +21,7 @@ const props = defineProps({
       </div>
       <el-table :data="data" style="width: 100%" height="90%"
         :header-row-style="{ color: '#A0AEC0', fontWeight: '700', fontSize: '18px'}"
-        :row-style="{ fontSize: '14px', color: 'black' }">
+        :row-style="{ fontSize: '16px', color: 'black' }">
         <slot name="table"></slot>
         <el-table-column fixed="right" label="操作" width="230">
           <template #default="{ row, $index }">

@@ -30,7 +30,7 @@ const logNode = (node, data) => {
         row-key="id"
         default-expand-all
         :header-row-style="{ color: '#A0AEC0', fontWeight: '700', fontSize: '18px'}"
-        :row-style="{ fontSize: '14px', color: 'black' }"
+        :row-style="{ fontSize: '16px', color: 'black' }"
       >
     
         <slot name="table"></slot>
