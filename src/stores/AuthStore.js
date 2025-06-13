@@ -38,7 +38,8 @@ export const userAuthStore = defineStore('auth-store', () => {
   const setToken = (token) => {
     USER_PROFILE.value = jwtDecode(token);
     USER_PERMISSION.value = getUniquePages(USER_PROFILE.value.roleModule);
-    Cookies.set('chatroomBackStage_Token', token);
+    const expires = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    Cookies.set('chatroomBackStage_Token', token, { expires });
   }
 
   // 清除 token cookie
