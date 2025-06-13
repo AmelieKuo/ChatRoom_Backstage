@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1111111",
+    "name": "新增",
+    "domID": "addBtn",
+    "notes": "新增元件按鈕"
+  },
+  {
+    "id": "2222222",
+    "name": "編輯",
+    "domID": "editBtn",
+    "notes": "點擊進入編輯畫面"
+  },
+  {
+    "id": "3333333",
+    "name": "刪除",
+    "domID": "delBtn",
+    "notes": "刪除該筆資料"
+  },
+  {
+    "id": "4444444",
+    "name": "查看",
+    "domID": "viewBtn",
+    "notes": "僅可檢視詳情，不可編輯"
+  },
+  {
+    "id": "5555555",
+    "name": "搜尋",
+    "domID": "searchBtn",
+    "notes": "執行搜尋條件查詢"
+  },
+  {
+    "id": "6666666",
+    "name": "匯出",
+    "domID": "exportBtn",
+    "notes": "匯出目前清單"
+  }
+]

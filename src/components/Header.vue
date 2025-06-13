@@ -1,7 +1,12 @@
 <script setup>
 import { Setting, User } from '@element-plus/icons-vue'
 import { computed } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
+import { userAuthStore } from '@/stores';
+import { storeToRefs } from 'pinia';
+
+const userStore = userAuthStore();
+const { USER_PROFILE } = storeToRefs(userStore);
 
 const route = useRoute();
 
@@ -34,7 +39,7 @@ const breadcrumb = computed(() => {
     </ul>
     <div class="flex items-center justify-end gap-5px">
       <User class="mr-5px w-20px text-text_light" />
-      <p class="min-w-70px mr-10px">Tom</p>
+      <p class="min-w-70px mr-10px">{{ USER_PROFILE.name || 'User' }}</p>
       <router-link to="/setting">
         <Setting class="color-text_light w-20px" />
       </router-link>

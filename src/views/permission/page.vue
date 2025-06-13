@@ -4,78 +4,17 @@ import TreeTable from '@/components/TreeTable.vue'
 import Pagination from '@/components/Pagination.vue'
 import { CloseBold } from '@element-plus/icons-vue'
 import { computed, ref, inject, reactive } from 'vue';
+import pageList from '@/mocks/permission/page.json';
+import elementList from '@/mocks/permission/element.json';
 
 const $alert = inject('$alert') 
-
-const pageList = ref([
-  {
-    id: "1",
-    name: "權限管理",
-    url: "",
-    sort: 0,
-    children: [
-      {
-        id: "1-1",
-        name: "頁面管理",
-        url: "/permission/page",
-        sort: 0,
-        elements: [
-          {
-            elementID: "1111111",
-            name: '新增',
-            domID: 'addBtn',
-            position: "header"
-          },
-          {
-            elementID: "2222222",
-            name: '編輯',
-            domID: 'editBtn',
-            position: "table"
-          },
-          {
-            elementID: "2222222",
-            name: '刪除',
-            domID: 'delBtn',
-            position: "table"
-          },
-        ],
-      },
-      {
-        id: "1-2",
-        name: "元件管理",
-        url: "/permission/element",
-        sort: 1,
-      },
-      {
-        id: "1-3",
-        name: "角色管理",
-        url: "/permission/role",
-        sort: 2,
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "會員管理",
-    url: "/user",
-    sort: 1,
-    children: [],
-  },
-  {
-    id: "3",
-    name: "最新消息管理",
-    url: "/news",
-    sort: 2,
-    children: [],
-  },
-]);
 
 const searchQuery = ref({
   page: 1,
   limit: 10,
 })
 
-const dataTotal = computed(() => pageList.value.length)
+const dataTotal = computed(() => currentPageList.length)
 
 const dialog = ref({
   visible: false,
@@ -86,19 +25,54 @@ const form = reactive({
   id: "",
   name: "",
   url: '',
-  parentID: "",
+  parentModuleId: "",
   sort: "",
+  elements: [
+    {
+      id: 1111111,
+      name: '新增',
+      domID: 'addBtn',
+      position: 'header',
+    },
+    {
+      id: 2222222,
+      name: '編輯',
+      domID: 'editBtn',
+      position: 'table',
+    },
+    {
+      id: 3333333,
+      name: '刪除',
+      domID: 'delBtn',
+      position: 'table',
+    },
+  ],
 })
 
 const formTemplate = JSON.parse(JSON.stringify(form))
+
+// 遞迴尋找父層ID
+const findparentModuleId = (id, list) => {
+  for (const item of list) {
+    if (item.children?.some(child => child.id === id)) {
+      return item.id;
+    } else if (item.children) {
+      const found = findparentModuleId(id, item.children);
+      if (found) return found;
+    }
+  }
+  return '';
+};
 
 const showDialog = async (type, row, idx) => {
   Object.assign(form, formTemplate)
   dialog.value.visible = true;
   dialog.value.mode = type;
 
-  if(type === 'add')return;
+  if (type === 'add') return;
+
   Object.assign(form, row);
+  form.parentModuleId = findparentModuleId(row.id, currentPageList);
 }
 
 const handleConfirm = () => {
@@ -130,10 +104,8 @@ const handleDel = async ({ index, row }) => {
   })
 };
 
-
-
 const pageSelectList = computed(() => {
-  return pageList.value.map((item) => ({
+  return currentPageList.map((item) => ({
     ...item,
     value: item.id,
     label: item.name,
@@ -147,22 +119,69 @@ const pageSelectList = computed(() => {
   }));
 });
 
-const elementsList = ref([
-  { value: 'add', label: '新增' },
-  { value: 'edit', label: '編輯' },
-  { value: 'delete', label: '刪除' },
-]);
+const elementOptions = computed(() => {
+  return elementList.map(item => ({
+    label: item.name,
+    value: item.domID,
+    id: item.id,
+    name: item.name,
+    notes: item.notes,
+    domID: item.domID,
+  }));
+});
 
 const positionList = ref([
   { value: 'header', label: 'header' },
   { value: 'table', label: 'table' },
 ]);
 
+const addElement = ref({
+  domID: '',
+  position: '',
+});
+
+const handleAddElement = () => {
+  if (!addElement.value.domID && !addElement.value.position) return;
+  if( form.elements.some(item => item.domID === addElement.value.domID && item.position === addElement.value.position)) {
+    $alert({
+      title: `已存在相同元件`,
+      type: 'warning',
+      showCancel: false,
+      timer: 3000,
+    });
+    return;
+  }
+  const newElement = {
+    id: Date.now(),
+    name: elementList.find(item => item.domID === addElement.value.domID)?.name || '未知元件',
+    domID: addElement.value.domID,
+    position: addElement.value.position,
+  };
+  form.elements.push(newElement);
+};
+
+const handleDelElement = ({ $index, row }) => {
+    form.elements.splice($index, 1);
+};
+
+const currentPageList = computed(() => {
+  const tempList = JSON.parse(JSON.stringify(pageList));
+
+  // 修改首頁路徑
+  tempList.forEach(item => {
+    if (item.url === '/home') {
+      item.url = '/';
+    }
+  });
+
+  return tempList;
+});
+
 </script>
 
 <template>
   <section>
-    <TreeTable :data="pageList">
+    <TreeTable :data="currentPageList">
       <template #header>
         <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
       </template>
@@ -200,7 +219,7 @@ const positionList = ref([
         </el-form-item>
         <el-form-item label="父層選單">
           <el-tree-select
-            v-model="form.parentID"
+            v-model="form.parentModuleId"
             :data="pageSelectList"
             :render-after-expand="false"
             style="width: 100%"
@@ -223,13 +242,13 @@ const positionList = ref([
           <p class="text-left">綁定元件</p>
           <div v-if="dialog.mode !== 'view'" class="flex items-center gap-5px">
             <el-select
-              v-model="value"
+              v-model="addElement.domID"
               placeholder="請選擇元件"
               size="small"
               style="width: 150px"
             >
               <el-option
-                v-for="item in elementsList"
+                v-for="item in elementOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -237,7 +256,7 @@ const positionList = ref([
             </el-select>
   
             <el-select
-              v-model="value"
+              v-model="addElement.position"
               placeholder="請選擇位置"
               size="small"
               style="width: 150px"
@@ -250,18 +269,24 @@ const positionList = ref([
               />
             </el-select>
   
-            <CommonButton v-if="dialog.mode !== 'view'" name="新增" class="h-32px!" @click="showDialog('add')" />
+            <CommonButton v-if="dialog.mode !== 'view'" name="新增" class="h-32px!" @click="handleAddElement" />
           </div>
+
+          <!-- 元件列表 -->
           <el-table :data="form.elements" style="width: 100%"
           :header-cell-style="{ backgroundColor: '#F8F9FA'}"
           :cell-style="{ backgroundColor: '#F8F9FA' }"
           class="mt-10px">
-            <el-table-column prop="name" label="元件名稱" />
+            <el-table-column prop="name" label="元件名稱">
+              <template #default="{ row, $index }">
+                {{ elementList.find(item => item.domID === row.domID)?.name || '未知元件' }}
+              </template>
+            </el-table-column>
             <el-table-column prop="domID" label="主鍵值" />
             <el-table-column prop="position" label="位置" />
             <el-table-column v-if="dialog.mode !== 'view'" fixed="right" label="操作" width="100">
               <template #default="{ row, $index }">
-                <CommonButton type="danger" name="刪除" @click="handleDel({ $index, row })" />
+                <CommonButton type="danger" name="刪除" @click="handleDelElement({ $index, row })" />
               </template>
             </el-table-column>
 

@@ -31,11 +31,11 @@ const devTeam = [
 <template>
   <section class="w-full h-full p-5 box-border">
     <h1 class="color-text_dark font-bold text-h1 mb-8px w-fit">開發團隊</h1>
-      <ul class="w-full h-[calc(100%-26px)] flex justify-center items-center gap-60px pb-10%">
-        <li v-for="item in devTeam" class="bg-#F8F9FA border-1px border-solid border-border_gray rounded-11px p-22px">
+      <ul class="w-full h-[calc(100%-26px)] flex justify-center items-center gap-2 md:gap-10 lg:gap-60px">
+        <li v-for="item in devTeam" class="bg-#F8F9FA border-1px border-solid border-border_gray rounded-11px p-5px md:p-22px box-border">
           <ul class="flex flex-col items-center gap-25px">
             <li>
-              <div class="max-w-235px">
+              <div class="max-w-150px lg:max-w-235px">
                 <img :src="item.image" :alt="item.name" class="w-full">
               </div>
             </li>

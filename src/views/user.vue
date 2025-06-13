@@ -3,107 +3,25 @@ import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
 import avatarUpload from '@/components/upload/avatarUpload.vue'
 import Dialog from '@/components/Dialog.vue'
-import Editor from '@/components/Editor.vue'
 import Pagination from '@/components/Pagination.vue'
 import { computed, ref, inject, reactive } from 'vue';
+import userList from '@/mocks/user.json';
+import roleList from '@/mocks/permission/role.json';
+
 
 const $alert = inject('$alert')
-
-const roleList = [
-  { label: '系統管理員', value: 'SYSTEM' },
-  { label: '一般管理員', value: 'ADMIN' },
-  { label: '使用者', value: 'USER' },
-]
-
-const userPermission = [{
-  id: "500071549886469",
-  userId: "240282957271109",
-  roleId: "SYS_ROLE_SYSTEM",
-  name: "系統管理員",
-  active: true,
-  roleModule: [{
-    id: "505019958599685",
-    roleId: "SYS_ROLE_SYSTEM",
-    moduleId: "389032908460037",
-    name: "news",
-    url: "/news",
-    primaryKey: "news",
-    description: "最新消息",
-    active: true,
-    roleModuleElement: [
-      {
-        elementID: "1111111",
-        domID: 'addBtn',
-        position: "header"
-      },
-      {
-        elementID: "2222222",
-        domID: 'editBtn',
-        position: "table"
-      },
-      {
-        elementID: "2222222",
-        domID: 'delBtn',
-        position: "table"
-      },
-    ]
-  }]
-}];
 
 const registerTypeList = [
   { label: '一般註冊', value: 0 },
   { label: '第三方註冊', value: 1 },
 ]
 
-const newsList = ref([
-  {
-    id: '11111',
-    name: '生菜樂樂',
-    account: 'XXXXXXXXXXX',
-    createDate: '2024-01-15',
-    pic: '',
-    role: ['SYSTEM', 'USER', 'ADMIN'],
-    registerType: 0,
-    active: true,
-  },
-  {
-    id: '22222',
-    name: '史奶酪',
-    account: 'XXXXXXXXXXX',
-    createDate: '2024-01-15',
-    pic: '',
-    role: ['SYSTEM', 'USER', 'ADMIN'],
-    registerType: 0,
-    active: true,
-  },
-  {
-    id: '33333',
-    name: '尼可樂',
-    account: 'XXXXXXXXXXX',
-    createDate: '2024-01-15',
-    pic: '',
-    role: ['SYSTEM', 'USER', 'ADMIN'],
-    registerType: 0,
-    active: true,
-  },
-  {
-    id: '44444',
-    name: '郭豆油',
-    account: 'XXXXXXXXXXX',
-    createDate: '2024-01-15',
-    pic: '',
-    role: ['SYSTEM', 'USER', 'ADMIN'],
-    registerType: 0,
-    active: true,
-  }
-])
-
 const searchQuery = ref({
   page: 1,
   limit: 10,
 })
 
-const dataTotal = computed(() => newsList.value.length)
+const dataTotal = computed(() => userList.length)
 
 const dialog = ref({
   visible: false,
@@ -173,7 +91,7 @@ const uploadAvatar = (file) => {
 
 <template>
   <section>
-    <CommonTable :data="newsList">
+    <CommonTable :data="userList">
 
       <template #header>
         <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
@@ -227,8 +145,8 @@ const uploadAvatar = (file) => {
           <p>{{ registerTypeList.find(item => item.value === form.registerType)?.label }}</p>
         </el-form-item>
         <el-form-item label="修改日期">
-          <el-checkbox-group v-model="form.role">
-            <el-checkbox v-for="role in roleList" :key="role" :label="role.label" :value="role.value"
+          <el-checkbox-group v-model="form.roles">
+            <el-checkbox v-for="role in roleList" :key="role" :label="role.name" :value="role.value"
               :disabled="role.value === 'SYSTEM'" />
           </el-checkbox-group>
         </el-form-item>
