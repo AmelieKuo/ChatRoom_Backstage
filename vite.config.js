@@ -25,6 +25,9 @@ export default defineConfig((config) => {
       // proxy: createViteProxy(viteEnv.VITE_HTTP_PROXY, viteEnvConfig),
       https: viteEnv.VITE_HTTP_SSL === "Y",
     },
+    define: {
+      __DEFINES__: {},
+    },
     plugins: [
       vue(),
       UnoCSS(),
