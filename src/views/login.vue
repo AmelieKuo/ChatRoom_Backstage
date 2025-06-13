@@ -68,11 +68,11 @@ const getUserPermission = (account) => permissions.find(p => p.account === accou
 
 <template>
   <section class="min-h-100vh w-full bg-white flex justify-between items-center">
-    <div class="w-full p-100px flex flex-col justify-center items-center xxl:ml-10% xxl:items-start">
+    <div class="w-full p-100px flex flex-col justify-center items-center xl:ml-10% xl:items-start">
 
       <h1 class="color-main_green font-bold text-h1 mb-8px w-fit">ChatRoom 管理後台</h1>
       <span class="color-text_light font-bold text-h4 w-fit">輸入帳號密碼登入</span>
-      <el-form ref="formRef" :rules="formRule" :model="form" label-width="auto" style="width: 100%" class="mt-20px max-w-500px">
+      <el-form ref="formRef" v-show="form" :rules="formRule" :model="form" class="w-full mt-20px max-w-500px">
         <el-form-item label="帳號" prop="account">
           <el-input v-model="form.account" placeholder="請輸入帳號" />
         </el-form-item>
@@ -91,8 +91,8 @@ const getUserPermission = (account) => permissions.find(p => p.account === accou
     </div>
 
     <div
-      class="hidden xxl:flex self-start w-fit h-80vh aspect-ratio-square bg-main_green justify-center items-center rounded-[0px_0px_0px_18px]">
-      <div class="">
+      class="hidden xl:flex self-start w-80% aspect-ratio-square bg-main_green justify-center items-center rounded-[0px_0px_0px_18px]">
+      <div class="w-45%">
         <img src="/images/logo/login.png" alt="chatRoom" class="w-full">
       </div>
     </div>

@@ -88,7 +88,6 @@ const handleClose = () => {
 }
 
 onMounted(() => {
-  console.log(USER_PROFILE.value);
 })
 
 </script>
