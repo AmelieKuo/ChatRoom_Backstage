@@ -1,79 +1,148 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { Menu as IconMenu, Tools, HomeFilled, UserFilled, List } from '@element-plus/icons-vue'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { userAuthStore } from '@/stores';
+import { storeToRefs } from 'pinia';
+import menuList from '@/mocks/permission/page.json';
+import { Tools, HomeFilled, UserFilled, List, ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue';
 
-const router = useRouter()
+const router = useRouter();
+const userStore = userAuthStore();
+const { USER_PERMISSION } = storeToRefs(userStore);
 
-const menuList = [
-  { name: '首頁', path: '/', icon: 'HomeFilled' },
-  { name: '權限管理', path: '/', icon: 'Tools',
-    children:[
-      { name: '頁面管理', path: '/permission/page'},
-      { name: '元件管理', path: '/permission/element'},
-      { name: '角色權限', path: '/permission/role'}
-    ]
-  },
-  { name: '會員管理', path: '/user', icon: 'UserFilled' },
-  { name: '最新消息管理', path: '/news', icon: 'List' },
-]
+const iconMap = {
+  Tools,
+  HomeFilled,
+  UserFilled,
+  List,
+  ArrowLeftBold,
+  ArrowRightBold
+};
 
-/** @func 前往其他頁 */ 
-const toPath = (link) => {
-  router.push(link)
-}
+const isCollapse = ref(false);
+const menu = ref(null);
 
+const toPath = (path) => {
+  if(path === '/home') {
+    router.push('/');
+  }else if (path) {
+    router.push(path);
+  }
+};
+
+// 遞迴過濾 menuList：只保留使用者有權限的項目
+const currentMenu = computed(() => {
+  const userUrls = USER_PERMISSION.value?.flatMap((mod) => {
+    const self = mod.url;
+    const subs = mod.children?.map(c => c.url) || [];
+    return [self, ...subs];
+  }) || [];
+
+  const filterMenu = (items) => {
+    return items
+      .map(item => {
+
+        const isHome = item.url === '/home';
+        const hasAccess = userUrls.includes(item.url);
+        const children = item.children ? filterMenu(item.children) : [];
+
+        if (isHome || hasAccess || children.length) {
+          return {
+            ...item,
+            children: children.length ? children : undefined
+          };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
+  };
+
+  return filterMenu(menuList);
+});
 </script>
 
 
+
 <template>
-  <el-aside width="200px">
-    <div class="h-43px p-10px">
-      <img src="/images/logo/logo_small.svg" alt="" class="h-full" />
+  <el-aside :width="isCollapse ? '64px' : '200px'" class="transition-all duration-300">
+    <!-- Logo + 開關 -->
+    <div class="h-43px p-10px flex items-center justify-between">
+      <img v-show="!isCollapse" src="/images/logo/logo_small.svg" alt="logo" class="h-full" />
+      <el-button
+        :icon="isCollapse ? 'ArrowRightBold' : 'ArrowLeftBold'"
+        circle size="small"
+        @click="isCollapse = !isCollapse"
+        class="bg-transparent border-transparent"
+      />
     </div>
+
+    <!-- 選單 -->
     <el-scrollbar class="max-h-[calc(100%-43px-166px)]">
-      <el-menu :unique-opened="true" class="h-100% bg-transparent border-r-0">
-        <template v-for="(first, firstIdx) in menuList" :key="firstIdx">
+      <el-menu ref="menu" :collapse="isCollapse" :unique-opened="true" class="h-full bg-transparent border-r-0">
+        
+        <template v-for="(item, idx) in currentMenu" :key="idx">
           <!-- 有子層 -->
-          <el-sub-menu v-if="first.children" :index="String(firstIdx+1)"
-            class="color-text_light font-700 text-16px duration-300">
-            <template #title>
-              <div @click="toPath(first.path)" class="color-text_light font-700 text-16px duration-300 flex">
-                <UseIcon :name="first.icon" class="w-18px mr-10px" />
-                {{ first.name }}
-              </div>
-            </template>
-            <el-menu-item @click="toPath(second.path)" v-for="(second, secondIdx) in first.children"
-              :key="secondIdx" :index="`${firstIdx + 1}-${secondIdx + 1}`"
-              class="!pl-16px color-text_light font-700 text-16px duration-300">{{
-              second.name }}
-            </el-menu-item>
-          </el-sub-menu>
-          <!-- 沒有子層 -->
-          <el-menu-item v-else :index="String(firstIdx + 1)" @click="toPath(first.path)"
-            class="color-text_light font-700 text-16px duration-300">
-            <template #title>
-              <UseIcon :name="first.icon"
-                class="w-18px mr-10px group-hover:color-main_green group-active:color-main_green" />
-              {{ first.name }}
-            </template>
+          <template v-if="item.children?.length">
+            <el-sub-menu :index="item.url || String(idx)" class="color-text_light font-700 text-16px duration-300">
+              <template #title>
+                <div class="flex items-center color-text_light font-700 text-16px duration-300">
+                  <component :is="iconMap[item.icon]" v-if="item.icon" class="w-18px mr-10px" />
+                  <span v-if="!isCollapse">{{ item.name }}</span>
+                </div>
+              </template>
+              <template v-for="(sub, sidx) in item.children" :key="`${idx}-${sidx}`">
+                <template v-if="sub.children?.length">
+                  <el-sub-menu :index="sub.url || `${idx}-${sidx}`" class="color-text_light font-700 text-16px duration-300">
+                    <template #title>
+                      <div class="flex items-center">
+                        <component :is="iconMap[sub.icon]" v-if="sub.icon" class="w-18px mr-10px" />
+                        <span v-if="!isCollapse">{{ sub.name }}</span>
+                      </div>
+                    </template>
+                    <el-menu-item
+                      v-for="(third, tidx) in sub.children"
+                      :key="`${idx}-${sidx}-${tidx}`"
+                      :index="third.url"
+                      @click="toPath(third.url)"
+                      class="!pl-16px color-text_light font-700 text-16px duration-300"
+                    >
+                      {{ third.name }}
+                    </el-menu-item>
+                  </el-sub-menu>
+                </template>
+                <el-menu-item v-else :index="sub.url" @click="toPath(sub.url)" class="!pl-16px color-text_light font-700 text-16px duration-300">
+                  {{ sub.name }}
+                </el-menu-item>
+              </template>
+            </el-sub-menu>
+          </template>
+
+          <!-- 無子層 -->
+          <el-menu-item v-else :index="item.url || String(idx)" @click="toPath(item.url)" class="color-text_light font-700 text-16px duration-300">
+            <component :is="iconMap[item.icon]" v-if="item.icon" class="w-18px mr-10px" />
+            <span v-if="!isCollapse">{{ item.name }}</span>
           </el-menu-item>
         </template>
       </el-menu>
     </el-scrollbar>
 
+    <!-- 開發人員 -->
     <div
-      class="flex flex-col gap-10px p-13px rounded-15px overflow-hidden bg-main_green bg-right bg-contain bg-[url('/images/spiral.svg')]">
-      <div class="w-30px bg-white rounded-9px overflow-hidden aspect-ratio-square flex justify-center items-center">
-        <div
-          class="w-16px aspect-ratio-square bg-main_green color-white rounded-full overflow-hidden flex justify-center items-center">
-          ?</div>
+      v-show="!isCollapse"
+      class="flex flex-col gap-10px p-13px rounded-15px text-white text-sm bg-main_green bg-[url('/images/spiral.svg')] bg-contain"
+    >
+      <div class="w-30px bg-white rounded-9px aspect-square flex justify-center items-center">
+        <div class="w-16px bg-main_green text-white rounded-full flex justify-center items-center">?</div>
       </div>
       <h3 class="text-16px font-700">需要幫助嗎?</h3>
-      <p class="text-16px">請聯絡開發人員</p>
+      <p>請聯絡開發人員</p>
       <el-button @click="router.push('/')" type="primary" color="#ffff">聯絡我們</el-button>
     </div>
   </el-aside>
 </template>
+
+
 
 <style scoped>
 :deep(.el-sub-menu ul){

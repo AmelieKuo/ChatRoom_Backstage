@@ -1,0 +1,155 @@
+[
+  {
+    "id": "user-test-id",
+    "account": "Test",
+    "userId": "user-test",
+    "name": "User Test",
+    "active": true,
+    "createDate": "2024-01-01",
+    "pic": "",
+    "roles": [
+      "SYSTEM",
+      "ADMIN",
+      "STAFF"
+    ],
+    "registerType": 0,
+    "roleModule": [
+      {
+        "role": "SYSTEM",
+        "pages": [
+          {
+            "name": "頁面管理",
+            "url": "/permission/page",
+            "primaryKey": "permission/page",
+            "roleModuleElement": [
+              {
+                "elementID": "1111111",
+                "domID": "addBtn",
+                "position": "header"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "editBtn",
+                "position": "table"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "delBtn",
+                "position": "table"
+              }
+            ]
+          },
+          {
+            "name": "元件管理",
+            "url": "/permission/element",
+            "primaryKey": "permission/element",
+            "roleModuleElement": []
+          },
+          {
+            "name": "角色管理",
+            "url": "/permission/role",
+            "primaryKey": "permission/role",
+            "roleModuleElement": []
+          },
+          {
+            "name": "會員管理",
+            "url": "/user",
+            "primaryKey": "user",
+            "roleModuleElement": []
+          },
+          {
+            "name": "最新消息管理",
+            "url": "/news",
+            "primaryKey": "news",
+            "roleModuleElement": []
+          }
+        ]
+      },
+      {
+        "role": "ADMIN",
+        "pages": []
+      },
+      {
+        "role": "STAFF",
+        "pages": [
+          {
+            "name": "最新消息管理",
+            "url": "/news",
+            "primaryKey": "news",
+            "roleModuleElement": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "user-staff-id",
+    "account": "Staff",
+    "userId": "user-staff",
+    "name": "User Staff",
+    "active": true,
+    "createDate": "2024-01-01",
+    "pic": "",
+    "roles": [
+      "STAFF"
+    ],
+    "registerType": 0,
+    "roleModule": [
+      {
+        "role": "STAFF",
+        "pages": [
+          {
+            "name": "最新消息管理",
+            "url": "/news",
+            "primaryKey": "news",
+            "roleModuleElement": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "11111",
+    "name": "生菜樂樂",
+    "account": "XXXXXXXXXXX",
+    "createDate": "2024-01-15",
+    "pic": "",
+    "roles": [],
+    "registerType": 0,
+    "active": true,
+    "roleModule": []
+  },
+  {
+    "id": "22222",
+    "name": "史奶酪",
+    "account": "XXXXXXXXXXX",
+    "createDate": "2024-01-15",
+    "pic": "",
+    "roles": [],
+    "registerType": 0,
+    "active": true,
+    "roleModule": []
+  },
+  {
+    "id": "33333",
+    "name": "尼可樂",
+    "account": "XXXXXXXXXXX",
+    "createDate": "2024-01-15",
+    "pic": "",
+    "roles": [],
+    "registerType": 0,
+    "active": true,
+    "roleModule": []
+  },
+  {
+    "id": "44444",
+    "name": "郭豆油",
+    "account": "XXXXXXXXXXX",
+    "createDate": "2024-01-15",
+    "pic": "",
+    "roles": [],
+    "registerType": 0,
+    "active": true,
+    "roleModule": []
+  }
+]

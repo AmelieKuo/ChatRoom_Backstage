@@ -1,27 +1,31 @@
 <script setup>
 import { onMounted, ref, inject } from 'vue';
+import roleList from '@/mocks/permission/role.json';
 import CommonButton from '@/components/CommonButton.vue';
 import Dialog from '@/components/Dialog.vue';
-const $alert = inject('$alert') 
+import { userAuthStore } from '@/stores';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+
+const $alert = inject('$alert');
+const router = useRouter();
+
+const userStore = userAuthStore();
+const { removeToken } = userStore;
+const { USER_PROFILE } = storeToRefs(userStore);
 
 const isView = ref(true);
 
-const roleList = [
-  { label: '系統管理員', value: 'SYSTEM' },
-  { label: '一般管理員', value: 'ADMIN' },
-  { label: '使用者', value: 'USER' },
-]
-
-const userStore = {
-  name: 'John Doe',
-  account: 'johndoe',
-  role: ['ADMIN', 'USER', 'SYSTEM'],
-}
-
-const user = ref({})
+const user = ref({
+  name: "",
+  account: "",
+  role: [],
+})
 
 const handleCancel = () =>{
-  user.value = userStore;
+  user.value.name = USER_PROFILE.value.name;
+  user.value.account = USER_PROFILE.value.account;
+  user.value.account = USER_PROFILE.value.account;
   isView.value = true;
 }
 
@@ -47,7 +51,19 @@ const passwordForm = ref({
   oldPassword: '',
   newPassword: '',
   checkPassword: '',
-})
+});
+
+const signOut = () => {
+  removeToken();
+  $alert({
+    title: `登出成功`,
+    type: 'success',
+    showCancel: false,
+    timer: 3000,
+  }).then(() => {
+    router.push('/login');
+  })
+};
 
 const handleSubmitPassword = () => {
   passwordForm.value.id = user.value.id;
@@ -59,9 +75,9 @@ const handleSubmitPassword = () => {
     showCancel: false,
     timer: 3000,
   }).then(() => {
-    // 登出
+    signOut();
   })
-}
+};
 
 const handleClose = () => {
   passwordForm.value.is = '';
@@ -72,7 +88,7 @@ const handleClose = () => {
 }
 
 onMounted(() => {
-  user.value = JSON.parse(JSON.stringify(userStore));
+  console.log(USER_PROFILE.value);
 })
 
 </script>
@@ -83,21 +99,21 @@ onMounted(() => {
     <div class="w-300px">
       <el-form :model="user" label-width="auto" label-position="top">
         <el-form-item label="登入姓名">
-          <span v-if="isView">{{ user.name }}</span>
+          <span v-if="isView">{{ USER_PROFILE.name }}</span>
           <el-input v-else v-model="user.name" />
         </el-form-item>
         <el-form-item label="登入帳戶">
-          <span>{{ user.account }}</span>
+          <span>{{ USER_PROFILE.account }}</span>
         </el-form-item>
         <el-form-item label="登入權限">
           <ul v-if="isView" class="w-full flex gap-5px">
-            <li v-for="(role, idx) in user.role" :key="idx">
-              {{ roleList.find(item => item.value === role)?.label }}
+            <li v-for="(role, idx) in USER_PROFILE.roles" :key="idx">
+              {{ roleList.find(item => item.value === role)?.name }}
               <span v-if="idx !== user.role.length - 1">,</span>
             </li>
           </ul>
           <el-select v-else v-model="user.role" multiple class="w-full">
-            <el-option v-for="role in roleList" :key="role" :label="role.label" :value="role.value"
+            <el-option v-for="role in roleList" :key="role" :label="role.name" :value="role.value"
               :disabled="role.value === 'SYSTEM'" />
           </el-select>
         </el-form-item>
@@ -105,11 +121,15 @@ onMounted(() => {
     </div>
 
     <!-- 按鈕 -->
-    <div class="flex justify-end">
-      <CommonButton v-if="isView" @click="isView = !isView" type="edit" name="修改個人資料" class="h-36px" />
-      <CommonButton v-else @click="handleSubmit" type="success" name="儲存" class="h-36px" />
-      <CommonButton v-if="!isView" @click="handleCancel" type="info" name="取消" class="h-36px" />
-      <CommonButton v-if="isView" @click="dialog.visible = true" type="danger" name="修改密碼" class="h-36px" />
+    <div class="flex flex-col justify-start gap-15px items-end">
+      <div class="flex justify-end">
+        <CommonButton v-if="isView" @click="isView = !isView" type="edit" name="修改個人資料" class="h-36px" />
+        <CommonButton v-else @click="handleSubmit" type="success" name="儲存" class="h-36px" />
+        <CommonButton v-if="!isView" @click="handleCancel" type="info" name="取消" class="h-36px" />
+        <CommonButton v-if="isView" @click="dialog.visible = true" type="danger" name="修改密碼" class="h-36px" />
+      </div>
+    
+      <CommonButton @click="signOut" type="primary" name="登出" class="h-36px max-w-88px" />
     </div>
 
     <Dialog v-model:visible="dialog.visible" :mode="dialog.mode" @confirm="handleSubmitPassword" :title="dialog.title"

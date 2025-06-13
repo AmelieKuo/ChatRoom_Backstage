@@ -1,13 +1,39 @@
-// import { ElMessage } from 'element-plus';
-// import { jwtDecode } from 'jwt-decode';
-// import { GET_TOKEN, REMOVE_TOKEN } from '@/utils';
-// import { FETCH_AUTH } from '@/services';
-// import { userAuthStore } from '../stores';
+import { userAuthStore } from '@/stores';
+import { storeToRefs } from 'pinia';
+import { ElMessage } from 'element-plus';
+import { jwtDecode } from 'jwt-decode';
 
-// 路由守衛
 const permission = (router) => {
-  router.beforeEach(async (to) => {
+  router.beforeEach((to, from) => {
+    const userStore = userAuthStore();
+    const { USER_PROFILE, USER_PERMISSION } = storeToRefs(userStore);
+    const { getToken } = userStore;
 
+    const whitePath = ['/login'];
+    const token = getToken();
+
+    // 若已有 token，無法進入登入頁需導向首頁
+    if (to.path === '/login' && token) {
+      return { path: '/' };
+    }
+
+    // 非白名單且沒有 token，導向登入
+    if (!whitePath.includes(to.path) && !token) {
+      return { path: '/login' };
+    }
+
+    // 有登入，檢查頁面權限
+    if (token && to.path !== '/' && to.path !== '/setting') {
+      const decoded = jwtDecode(token);
+      const userPermission = USER_PERMISSION.value.length ? USER_PERMISSION.value : decoded?.roleModule || [];
+  
+      if(!userPermission.some(item => item.url === to.path)){
+        ElMessage.error('該頁面沒有訪問權限');
+        return { path: '/' };
+      }
+    }
+
+    return true;
   });
 };
 

@@ -2,40 +2,18 @@
 import CommonTable from '@/components/CommonTable.vue'
 import CommonButton from '@/components/CommonButton.vue'
 import Dialog from '@/components/Dialog.vue'
-import Editor from '@/components/Editor.vue'
 import Pagination from '@/components/Pagination.vue'
 import { computed, ref, inject, reactive } from 'vue';
+import elementList from '@/mocks/permission/element.json';
 
 const $alert = inject('$alert') 
-
-const elementList = ref([
-  {
-    id: "1111111",
-    name: "新增",
-    domId: "addBtn",
-    notes: "新增元件按鈕",
-  },
-  {
-    id: "2222222",
-    name: "編輯",
-    domId: "editBtn",
-    notes: "",
-  },
-  {
-    id: "2222222",
-    name: "刪除",
-    domId: "delBtn",
-    notes: "",
-  }
-]);
-
 
 const searchQuery = ref({
   page: 1,
   limit: 10,
 })
 
-const dataTotal = computed(() => elementList.value.length)
+const dataTotal = computed(() => elementList.length)
 
 const dialog = ref({
   visible: false,
@@ -45,7 +23,7 @@ const dialog = ref({
 const form = reactive({
   id: "",
   name: "",
-  domId: '',
+  domID: '',
   notes: "",
 })
 
@@ -101,7 +79,7 @@ const handleDel = async ({ index, row }) => {
 
       <template #table>
         <el-table-column prop="name" label="元件名稱" min-width="200" />
-        <el-table-column prop="domId" label="DomID" min-width="150" />
+        <el-table-column prop="domID" label="主鍵值" min-width="150" />
       </template>
 
       <template #toolbar="{ row, index }">
@@ -120,8 +98,8 @@ const handleDel = async ({ index, row }) => {
         <el-form-item label="元件名稱">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="DomID">
-          <el-input v-model="form.domId" />
+        <el-form-item label="domID">
+          <el-input v-model="form.domID" />
         </el-form-item>
         <el-form-item label="備註">
           <el-input v-model="form.notes" />

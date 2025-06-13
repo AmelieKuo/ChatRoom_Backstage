@@ -1,0 +1,104 @@
+[
+  {
+    "name": "系統管理員",
+    "value": "SYSTEM",
+    "pages": [
+      {
+        "name": "權限管理",
+        "url": "/",
+        "icon": "Tools",
+        "id": "2",
+        "parentModuleId": "",
+        "sort": 1,
+        "children": [
+          {
+            "name": "頁面管理",
+            "url": "/permission/page",
+            "id": "2-1",
+            "parentModuleId": "2",
+            "sort": 0,
+            "elements": [
+              { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+              { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+              { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+            ]
+          },
+          {
+            "name": "元件管理",
+            "url": "/permission/element",
+            "id": "2-2",
+            "parentModuleId": "2",
+            "sort": 1,
+            "elements": [
+              { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+              { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+              { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+            ]
+          },
+          {
+            "name": "角色權限",
+            "url": "/permission/role",
+            "id": "2-3",
+            "parentModuleId": "2",
+            "sort": 2,
+            "elements": [
+              { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+              { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+              { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "會員管理",
+        "url": "/user",
+        "icon": "UserFilled",
+        "id": "3",
+        "parentModuleId": "",
+        "sort": 2,
+        "elements": [
+          { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+          { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+          { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+        ]
+      },
+      {
+        "name": "最新消息管理",
+        "url": "/news",
+        "icon": "List",
+        "id": "4",
+        "parentModuleId": "",
+        "sort": 3,
+        "elements": [
+          { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+          { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+          { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "一般管理員",
+    "value": "ADMIN",
+    "pages": []
+  },
+  {
+    "name": "工作人員",
+    "value": "STAFF",
+    "pages": [
+      {
+        "name": "最新消息管理",
+        "url": "/news",
+        "icon": "List",
+        "id": "4",
+        "parentModuleId": "",
+        "sort": 3,
+        "elements": [
+          { "elementID": "1111111", "domID": "addBtn", "position": "header" },
+          { "elementID": "2222222", "domID": "editBtn", "position": "table" },
+          { "elementID": "2222222", "domID": "delBtn", "position": "table" }
+        ]
+      }
+    ]
+  }
+]
