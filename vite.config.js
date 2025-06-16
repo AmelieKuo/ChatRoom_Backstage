@@ -11,10 +11,8 @@ export default defineConfig((config) => {
 
 
   console.log("====================模式與環境====================");
-  console.log("env", viteEnv);
   console.log("mode", mode);
-  // console.log("isOpenProxy", isOpenProxy);
-  // console.log("viteEnvConfig", viteEnvConfig);
+  console.log("env", viteEnv);
   // console.log("=================================================");
 
   return {
@@ -22,11 +20,20 @@ export default defineConfig((config) => {
     server: {
       host: "0.0.0.0",
       open: true,
-      // proxy: createViteProxy(viteEnv.VITE_HTTP_PROXY, viteEnvConfig),
+      proxy: viteEnv.VITE_HTTP_PROXY === "Y"
+        ? {
+            [viteEnv.VITE_PROXY_PATTERN]: {
+              target: viteEnv.VITE_PROXY_TARGET,
+              changeOrigin: true,
+              rewrite: path =>
+                path.replace(
+                  new RegExp(`^${viteEnv.VITE_PROXY_PATTERN}`),
+                  `${viteEnv.VITE_PROXY_PATTERN}`
+                ),
+            },
+          }
+        : undefined,  
       https: viteEnv.VITE_HTTP_SSL === "Y",
-    },
-    define: {
-      __DEFINES__: {},
     },
     plugins: [
       vue(),
