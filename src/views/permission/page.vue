@@ -1,5 +1,6 @@
 <script setup>
-import CommonButton from '@/components/CommonButton.vue'
+import PermissionButton from '@/components/PermissionButton.vue';
+import CommonButton from '@/components/CommonButton.vue';
 import TreeTable from '@/components/TreeTable.vue'
 import Pagination from '@/components/Pagination.vue'
 import { CloseBold } from '@element-plus/icons-vue'
@@ -14,7 +15,7 @@ const searchQuery = ref({
   limit: 10,
 })
 
-const dataTotal = computed(() => currentPageList.length)
+const dataTotal = computed(() => currentPageList.value.length)
 
 const dialog = ref({
   visible: false,
@@ -52,12 +53,12 @@ const form = reactive({
 const formTemplate = JSON.parse(JSON.stringify(form))
 
 // 遞迴尋找父層ID
-const findparentModuleId = (id, list) => {
+const findParentModuleId = (id, list) => {
   for (const item of list) {
     if (item.children?.some(child => child.id === id)) {
       return item.id;
     } else if (item.children) {
-      const found = findparentModuleId(id, item.children);
+      const found = findParentModuleId(id, item.children);
       if (found) return found;
     }
   }
@@ -72,7 +73,7 @@ const showDialog = async (type, row, idx) => {
   if (type === 'add') return;
 
   Object.assign(form, row);
-  form.parentModuleId = findparentModuleId(row.id, currentPageList);
+  form.parentModuleId = findParentModuleId(row.id, currentPageList.value);
 }
 
 const handleConfirm = () => {
@@ -81,9 +82,10 @@ const handleConfirm = () => {
     type: 'success',
     showCancel: false,
     timer: 3000,
-  }).then((result) => {
-    console.log(result)
+  }).then(() => {
+    dialog.value.visible = false
   })
+  console.log('新增', form)
 }
 
 const handleDel = async ({ index, row }) => {
@@ -105,7 +107,7 @@ const handleDel = async ({ index, row }) => {
 };
 
 const pageSelectList = computed(() => {
-  return currentPageList.map((item) => ({
+  return currentPageList.value.map((item) => ({
     ...item,
     value: item.id,
     label: item.name,
@@ -177,13 +179,31 @@ const currentPageList = computed(() => {
   return tempList;
 });
 
+/** 按鈕事件 */ 
+const btnHandle = (obj) => {
+  switch (obj.domID)
+    {
+      case 'addBtn':
+        showDialog('add');
+        break;
+      case 'editBtn':
+        showDialog('edit', obj.row, obj.index)
+        break;
+      case 'delBtn':
+        handleDel({ index:obj.index, row:obj.row })
+        break;
+      default:
+        showDialog('view', obj.row, obj.index);
+    }
+};
+
 </script>
 
 <template>
   <section>
     <TreeTable :data="currentPageList">
       <template #header>
-        <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
+        <PermissionButton position="header" @btnEvent="btnHandle"/>
       </template>
 
       <template #table>
@@ -192,9 +212,7 @@ const currentPageList = computed(() => {
       </template>
 
       <template #toolbar="{ row, index }">
-        <CommonButton type="view" name="查看" @click="showDialog('view', row, index)" />
-        <CommonButton type="edit" name="編輯" @click="showDialog('edit', row, index)" />
-        <CommonButton type="danger" name="刪除" @click="handleDel({ index, row })" />
+        <PermissionButton position="table" @btnEvent="btnHandle" :row="row" :index="index"/>
       </template>
 
       <template #pagination>
@@ -210,7 +228,7 @@ const currentPageList = computed(() => {
         </div>
       </template>
 
-      <el-form :model="form" label-width="auto" label-position="top" :disabled="dialog.mode === 'view'">
+      <el-form :model="form" label-width="auto" label-position="top" :disabled="dialog.mode === 'view'" @close="dialog.visible = false">
         <el-form-item label="頁面名稱">
           <el-input v-model="form.name" />
         </el-form-item>
