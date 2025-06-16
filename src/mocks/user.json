@@ -43,25 +43,89 @@
             "name": "元件管理",
             "url": "/permission/element",
             "primaryKey": "permission/element",
-            "roleModuleElement": []
+            "roleModuleElement": [
+              {
+                "elementID": "1111111",
+                "domID": "addBtn",
+                "position": "header"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "editBtn",
+                "position": "table"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "delBtn",
+                "position": "table"
+              }
+            ]
           },
           {
             "name": "角色管理",
             "url": "/permission/role",
             "primaryKey": "permission/role",
-            "roleModuleElement": []
+            "roleModuleElement": [
+              {
+                "elementID": "1111111",
+                "domID": "addBtn",
+                "position": "header"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "editBtn",
+                "position": "table"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "delBtn",
+                "position": "table"
+              }
+            ]
           },
           {
             "name": "會員管理",
             "url": "/user",
             "primaryKey": "user",
-            "roleModuleElement": []
+            "roleModuleElement": [
+              {
+                "elementID": "1111111",
+                "domID": "addBtn",
+                "position": "header"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "editBtn",
+                "position": "table"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "delBtn",
+                "position": "table"
+              }
+            ]
           },
           {
             "name": "最新消息管理",
             "url": "/news",
             "primaryKey": "news",
-            "roleModuleElement": []
+            "roleModuleElement": [
+              {
+                "elementID": "1111111",
+                "domID": "addBtn",
+                "position": "header"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "editBtn",
+                "position": "table"
+              },
+              {
+                "elementID": "2222222",
+                "domID": "delBtn",
+                "position": "table"
+              }
+            ]
           }
         ]
       },

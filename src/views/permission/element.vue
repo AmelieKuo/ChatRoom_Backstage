@@ -1,10 +1,10 @@
 <script setup>
 import CommonTable from '@/components/CommonTable.vue'
-import CommonButton from '@/components/CommonButton.vue'
 import Dialog from '@/components/Dialog.vue'
 import Pagination from '@/components/Pagination.vue'
 import { computed, ref, inject, reactive } from 'vue';
 import elementList from '@/mocks/permission/element.json';
+import PermissionButton from '@/components/PermissionButton.vue'
 
 const $alert = inject('$alert') 
 
@@ -66,7 +66,25 @@ const handleDel = async ({ index, row }) => {
       })
     }
   })
-}
+};
+
+/** 按鈕事件 */ 
+const btnHandle = (obj) => {
+  switch (obj.domID)
+    {
+      case 'addBtn':
+        showDialog('add');
+        break;
+      case 'editBtn':
+        showDialog('edit', obj.row, obj.index)
+        break;
+      case 'delBtn':
+        handleDel({ index:obj.index, row:obj.row })
+        break;
+      default:
+        showDialog('view', obj.row, obj.index);
+    }
+};
 </script>
 
 <template>
@@ -74,7 +92,7 @@ const handleDel = async ({ index, row }) => {
     <CommonTable :data="elementList">
 
       <template #header>
-        <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
+        <PermissionButton position="header" @btnEvent="btnHandle"/>
       </template>
 
       <template #table>
@@ -83,9 +101,7 @@ const handleDel = async ({ index, row }) => {
       </template>
 
       <template #toolbar="{ row, index }">
-        <CommonButton type="view" name="查看" @click="showDialog('view', row, index)" />
-        <CommonButton type="edit" name="編輯" @click="showDialog('edit', row, index)" />
-        <CommonButton type="danger" name="刪除" @click="handleDel({ index, row })" />
+        <PermissionButton position="table" @btnEvent="btnHandle" :row="row" :index="index"/>
       </template>
 
       <template #pagination>

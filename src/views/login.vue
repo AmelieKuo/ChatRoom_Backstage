@@ -63,7 +63,6 @@ const getUserPermission = (account) => permissions.find(p => p.account === accou
   }
 };
 
-
 </script>
 
 <template>

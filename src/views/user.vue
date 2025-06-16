@@ -1,6 +1,6 @@
 <script setup>
 import CommonTable from '@/components/CommonTable.vue'
-import CommonButton from '@/components/CommonButton.vue'
+import PermissionButton from '@/components/PermissionButton.vue'
 import avatarUpload from '@/components/upload/avatarUpload.vue'
 import Dialog from '@/components/Dialog.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -86,6 +86,24 @@ const uploadAvatar = (file) => {
   console.log(form);
 }
 
+/** 按鈕事件 */ 
+const btnHandle = (obj) => {
+  switch (obj.domID)
+    {
+      case 'addBtn':
+        showDialog('add');
+        break;
+      case 'editBtn':
+        showDialog('edit', obj.row, obj.index)
+        break;
+      case 'delBtn':
+        handleDel({ index:obj.index, row:obj.row })
+        break;
+      default:
+        showDialog('view', obj.row, obj.index);
+    }
+};
+
 
 </script>
 
@@ -94,11 +112,11 @@ const uploadAvatar = (file) => {
     <CommonTable :data="userList">
 
       <template #header>
-        <CommonButton name="新增" class="h-32px!" @click="showDialog('add')" />
+        <PermissionButton position="header" @btnEvent="btnHandle"/>
       </template>
 
       <template #table>
-        <el-table-column prop="name" label="會員名稱" min-width="100">
+        <el-table-column prop="name" label="會員名稱" min-width="160">
           <template #default="{ row }">
             <div class="flex items-center gap-10px">
               <el-avatar :size="42" fit="cover" :src="row.pic ? row.pic : 'images/avatar.svg'" />
@@ -120,9 +138,7 @@ const uploadAvatar = (file) => {
       </template>
 
       <template #toolbar="{ row, index }">
-        <CommonButton type="view" name="查看" @click="showDialog('view', row, index)" />
-        <CommonButton type="edit" name="編輯" @click="showDialog('edit', row, index)" />
-        <CommonButton type="danger" name="刪除" @click="handleDel({ index, row })" />
+        <PermissionButton position="table" @btnEvent="btnHandle" :row="row" :index="index"/>
       </template>
 
       <template #pagination>
